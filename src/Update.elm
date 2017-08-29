@@ -3,6 +3,7 @@ module Update exposing (update)
 import String.Extra as String
 import Types exposing (Model, Msg(..))
 import Array.Hamt as Array
+import Functions exposing (Type(..))
 
 
 update : Msg -> Model -> Model
@@ -57,6 +58,67 @@ setOutput value model =
     { model | output = value |> String.emptyToNothing }
 
 
+
+-- HELPERS
+
+
 updateSuggestions : Model -> Model
 updateSuggestions model =
-    model
+    let
+        parsedInputs =
+            model.inputs
+                |> Array.toList
+                |> List.filterMap identity
+                |> List.map parse
+                |> List.filterMap identity
+
+        parsedOutput =
+            model.output
+                |> Maybe.andThen parse
+
+        satisfactoryFns =
+            case parsedOutput of
+                Nothing ->
+                    []
+
+                Just output ->
+                    case parsedInputs of
+                        -- TODO make the order not matter, possibly with List.Extra.permutations
+                        [ a ] ->
+                            satisfactoryFns1 a output
+
+                        [ a, b ] ->
+                            satisfactoryFns2 a b output
+
+                        _ ->
+                            []
+    in
+        { model | suggestions = satisfactoryFns }
+
+
+satisfactoryFns1 : Type -> Type -> List String
+satisfactoryFns1 a output =
+    Functions.functions1
+        |> List.filter (\fn -> fn.checkFn a output)
+        |> List.map .name
+
+
+satisfactoryFns2 : Type -> Type -> Type -> List String
+satisfactoryFns2 a b output =
+    Functions.functions2
+        |> List.filter (\fn -> fn.checkFn a b output)
+        |> List.map .name
+
+
+parse : String -> Maybe Type
+parse string =
+    -- TODO
+    case string of
+        "[1,2,3]" ->
+            Just <| TList (TInt 1) [ TInt 1, TInt 2, TInt 3 ]
+
+        "3" ->
+            Just <| TInt 3
+
+        _ ->
+            Nothing

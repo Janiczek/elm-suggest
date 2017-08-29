@@ -3,13 +3,13 @@ module Functions exposing (..)
 
 type alias Function1 =
     { name : String
-    , checkFn : Type -> Maybe Type
+    , checkFn : Type -> Type -> Bool
     }
 
 
 type alias Function2 =
     { name : String
-    , checkFn : Type -> Type -> Maybe Type
+    , checkFn : Type -> Type -> Type -> Bool
     }
 
 
@@ -19,11 +19,11 @@ type Type
     | TBool Bool
     | TChar Char
     | TString String
+    | TList Type (List Type)
 
 
 
 --| TTuple (List Type)
---| TList Type (List Type)
 --| TAny String
 --| TFunction (List Type) Type
 --| TRecord (List Field)
@@ -63,13 +63,18 @@ listLength : Function1
 listLength =
     { name = "List.length"
     , checkFn =
-        \a ->
+        \a output ->
             case a of
                 TList type_ vals ->
-                    Just <| TInt <| List.length vals
+                    case output of
+                        TInt intOutput ->
+                            List.length vals == intOutput
+
+                        _ ->
+                            False
 
                 _ ->
-                    Nothing
+                    False
     }
 
 
@@ -77,13 +82,18 @@ listIsEmpty : Function1
 listIsEmpty =
     { name = "List.isEmpty"
     , checkFn =
-        \a ->
+        \a output ->
             case a of
                 TList type_ vals ->
-                    Just <| TBool <| List.isEmpty vals
+                    case output of
+                        TBool boolOutput ->
+                            List.isEmpty vals == boolOutput
+
+                        _ ->
+                            False
 
                 _ ->
-                    Nothing
+                    False
     }
 
 
@@ -91,18 +101,23 @@ intPlus : Function2
 intPlus =
     { name = "(+)"
     , checkFn =
-        \a b ->
+        \a b output ->
             case a of
                 TInt intA ->
                     case b of
                         TInt intB ->
-                            Just <| TInt <| intA + intB
+                            case output of
+                                TInt intOutput ->
+                                    (intA + intB) == intOutput
+
+                                _ ->
+                                    False
 
                         _ ->
-                            Nothing
+                            False
 
                 _ ->
-                    Nothing
+                    False
     }
 
 
@@ -110,18 +125,23 @@ intMinus : Function2
 intMinus =
     { name = "(-)"
     , checkFn =
-        \a b ->
+        \a b output ->
             case a of
                 TInt intA ->
                     case b of
                         TInt intB ->
-                            Just <| TInt <| intA - intB
+                            case output of
+                                TInt intOutput ->
+                                    (intA - intB) == intOutput
+
+                                _ ->
+                                    False
 
                         _ ->
-                            Nothing
+                            False
 
                 _ ->
-                    Nothing
+                    False
     }
 
 
@@ -129,18 +149,23 @@ floatPlus : Function2
 floatPlus =
     { name = "(-)"
     , checkFn =
-        \a b ->
+        \a b output ->
             case a of
                 TFloat floatA ->
                     case b of
                         TFloat floatB ->
-                            Just <| TFloat <| floatA + floatB
+                            case output of
+                                TFloat floatOutput ->
+                                    (floatA + floatB) == floatOutput
+
+                                _ ->
+                                    False
 
                         _ ->
-                            Nothing
+                            False
 
                 _ ->
-                    Nothing
+                    False
     }
 
 
@@ -148,16 +173,21 @@ floatMinus : Function2
 floatMinus =
     { name = "(-)"
     , checkFn =
-        \a b ->
+        \a b output ->
             case a of
                 TFloat floatA ->
                     case b of
                         TFloat floatB ->
-                            Just <| TFloat <| floatA - floatB
+                            case output of
+                                TFloat floatOutput ->
+                                    (floatA - floatB) == floatOutput
+
+                                _ ->
+                                    False
 
                         _ ->
-                            Nothing
+                            False
 
                 _ ->
-                    Nothing
+                    False
     }
