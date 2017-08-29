@@ -3,23 +3,13 @@ module Parse exposing (parse)
 import Functions exposing (Type(..))
 import Parser as P exposing (Parser, (|.), (|=))
 import Char
+import Helpers exposing (debugIfErr)
 
 
 parse : String -> Maybe Type
 parse string =
     P.run any string
-        |> (\x ->
-                case x of
-                    Ok _ ->
-                        x
-
-                    Err err ->
-                        let
-                            _ =
-                                Debug.log string err
-                        in
-                            x
-           )
+        --|> debugIfErr string
         |> Result.toMaybe
 
 
@@ -30,7 +20,8 @@ any =
 
 allParsers : List (Parser Type)
 allParsers =
-    [ only string |> P.map TString
+    [ only order
+    , only string |> P.map TString
     , only bool
     , only number
     ]
@@ -95,6 +86,15 @@ number =
                         else
                             P.succeed (TInt int)
             )
+
+
+order : Parser Type
+order =
+    P.oneOf
+        [ P.keyword "LT" |> P.map (always (TOrder LT))
+        , P.keyword "EQ" |> P.map (always (TOrder EQ))
+        , P.keyword "GT" |> P.map (always (TOrder GT))
+        ]
 
 
 maybe : Parser Type

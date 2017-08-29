@@ -40,6 +40,7 @@ viewCaveats =
         [ H.h4 [] [ H.text "Caveats:" ]
         , H.ul []
             [ H.li [] [ H.text "Strings with escaped double quotes don't work" ]
+            , H.li [] [ H.text "Order doesn't work" ]
             , H.li [] [ H.text "Lists don't work" ]
             , H.li [] [ H.text "Tuples don't work" ]
             , H.li [] [ H.text "Maybes don't work" ]

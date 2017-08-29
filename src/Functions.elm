@@ -1,16 +1,16 @@
 module Functions exposing (..)
 
 
+type alias Named a =
+    { a | name : String }
+
+
 type alias Function1 =
-    { name : String
-    , checkFn : Type -> Type -> Bool
-    }
+    Named { checkFn : Type -> Type -> Bool }
 
 
 type alias Function2 =
-    { name : String
-    , checkFn : Type -> Type -> Type -> Bool
-    }
+    Named { checkFn : Type -> Type -> Type -> Bool }
 
 
 type Type
@@ -19,6 +19,8 @@ type Type
     | TBool Bool
     | TChar Char
     | TString String
+    | TOrder Order
+      -- TODO
     | TList (List Type)
     | TMaybe (Maybe Type)
 
@@ -29,7 +31,6 @@ type Type
 --| TFunction (List Type) Type
 --| TRecord (List Field)
 --| TExtensibleRecord String (List Field)
---| TUserType String (List Type)
 --type alias Field =
 --    ( String, Type )
 -- FN DATABASE
@@ -45,10 +46,12 @@ functions1 =
 
 functions2 : List Function2
 functions2 =
-    [ intPlus
-    , intMinus
-    , floatPlus
-    , floatMinus
+    [ plus
+    , minus
+    , equal
+    , notEqual
+    , lessThan
+    , greaterThan
     ]
 
 
@@ -113,18 +116,32 @@ listHead =
     }
 
 
-intPlus : Function2
-intPlus =
+plus : Function2
+plus =
     { name = "(+)"
     , checkFn =
         \a b output ->
-            case a of
-                TInt intA ->
-                    case b of
-                        TInt intB ->
-                            case output of
-                                TInt intOutput ->
-                                    (intA + intB) == intOutput
+            case output of
+                TInt intOutput ->
+                    case a of
+                        TInt intA ->
+                            case b of
+                                TInt intB ->
+                                    toFloat (intA + intB) == toFloat intOutput
+
+                                TFloat floatB ->
+                                    (toFloat intA + floatB) == toFloat intOutput
+
+                                _ ->
+                                    False
+
+                        TFloat floatA ->
+                            case b of
+                                TInt intB ->
+                                    (floatA + toFloat intB) == toFloat intOutput
+
+                                TFloat floatB ->
+                                    (floatA + floatB) == toFloat intOutput
 
                                 _ ->
                                     False
@@ -132,46 +149,25 @@ intPlus =
                         _ ->
                             False
 
-                _ ->
-                    False
-    }
+                TFloat floatOutput ->
+                    case a of
+                        TInt intA ->
+                            case b of
+                                TInt intB ->
+                                    toFloat (intA + intB) == floatOutput
 
-
-intMinus : Function2
-intMinus =
-    { name = "(-)"
-    , checkFn =
-        \a b output ->
-            case a of
-                TInt intA ->
-                    case b of
-                        TInt intB ->
-                            case output of
-                                TInt intOutput ->
-                                    (intA - intB) == intOutput
+                                TFloat floatB ->
+                                    (toFloat intA + floatB) == floatOutput
 
                                 _ ->
                                     False
 
-                        _ ->
-                            False
+                        TFloat floatA ->
+                            case b of
+                                TInt intB ->
+                                    (floatA + toFloat intB) == floatOutput
 
-                _ ->
-                    False
-    }
-
-
-floatPlus : Function2
-floatPlus =
-    { name = "(+)"
-    , checkFn =
-        \a b output ->
-            case a of
-                TFloat floatA ->
-                    case b of
-                        TFloat floatB ->
-                            case output of
-                                TFloat floatOutput ->
+                                TFloat floatB ->
                                     (floatA + floatB) == floatOutput
 
                                 _ ->
@@ -185,22 +181,267 @@ floatPlus =
     }
 
 
-floatMinus : Function2
-floatMinus =
+minus : Function2
+minus =
     { name = "(-)"
     , checkFn =
         \a b output ->
-            case a of
-                TFloat floatA ->
-                    case b of
-                        TFloat floatB ->
-                            case output of
-                                TFloat floatOutput ->
+            case output of
+                TInt intOutput ->
+                    case a of
+                        TInt intA ->
+                            case b of
+                                TInt intB ->
+                                    toFloat (intA - intB) == toFloat intOutput
+
+                                TFloat floatB ->
+                                    (toFloat intA - floatB) == toFloat intOutput
+
+                                _ ->
+                                    False
+
+                        TFloat floatA ->
+                            case b of
+                                TInt intB ->
+                                    (floatA - toFloat intB) == toFloat intOutput
+
+                                TFloat floatB ->
+                                    (floatA - floatB) == toFloat intOutput
+
+                                _ ->
+                                    False
+
+                        _ ->
+                            False
+
+                TFloat floatOutput ->
+                    case a of
+                        TInt intA ->
+                            case b of
+                                TInt intB ->
+                                    toFloat (intA - intB) == floatOutput
+
+                                TFloat floatB ->
+                                    (toFloat intA - floatB) == floatOutput
+
+                                _ ->
+                                    False
+
+                        TFloat floatA ->
+                            case b of
+                                TInt intB ->
+                                    (floatA - toFloat intB) == floatOutput
+
+                                TFloat floatB ->
                                     (floatA - floatB) == floatOutput
 
                                 _ ->
                                     False
 
+                        _ ->
+                            False
+
+                _ ->
+                    False
+    }
+
+
+equal : Function2
+equal =
+    { name = "(==)"
+    , checkFn =
+        \a b output ->
+            case output of
+                TBool boolOutput ->
+                    case a of
+                        TInt intA ->
+                            case b of
+                                TInt intB ->
+                                    (intA == intB) == boolOutput
+
+                                TFloat floatB ->
+                                    (toFloat intA == floatB) == boolOutput
+
+                                _ ->
+                                    False
+
+                        TFloat floatA ->
+                            case b of
+                                TInt intB ->
+                                    (floatA == toFloat intB) == boolOutput
+
+                                TFloat floatB ->
+                                    (floatA == floatB) == boolOutput
+
+                                _ ->
+                                    False
+
+                        -- TODO remaining types (think about all of them)
+                        TBool boolA ->
+                            case b of
+                                TBool boolB ->
+                                    (boolA == boolB) == boolOutput
+
+                                _ ->
+                                    False
+
+                        TString stringA ->
+                            case b of
+                                TString stringB ->
+                                    (stringA == stringB) == boolOutput
+
+                                _ ->
+                                    False
+
+                        _ ->
+                            False
+
+                _ ->
+                    False
+    }
+
+
+notEqual : Function2
+notEqual =
+    { name = "(/=)"
+    , checkFn =
+        \a b output ->
+            case output of
+                TBool boolOutput ->
+                    case a of
+                        TInt intA ->
+                            case b of
+                                TInt intB ->
+                                    (intA /= intB) == boolOutput
+
+                                TFloat floatB ->
+                                    (toFloat intA /= floatB) == boolOutput
+
+                                _ ->
+                                    False
+
+                        TFloat floatA ->
+                            case b of
+                                TInt intB ->
+                                    (floatA /= toFloat intB) == boolOutput
+
+                                TFloat floatB ->
+                                    (floatA /= floatB) == boolOutput
+
+                                _ ->
+                                    False
+
+                        TBool boolA ->
+                            case b of
+                                TBool boolB ->
+                                    (boolA /= boolB) == boolOutput
+
+                                _ ->
+                                    False
+
+                        TString stringA ->
+                            case b of
+                                TString stringB ->
+                                    (stringA /= stringB) == boolOutput
+
+                                _ ->
+                                    False
+
+                        -- TODO remaining types (think about all of them)
+                        _ ->
+                            False
+
+                _ ->
+                    False
+    }
+
+
+lessThan : Function2
+lessThan =
+    { name = "(<)"
+    , checkFn =
+        \a b output ->
+            case output of
+                TBool boolOutput ->
+                    case a of
+                        TInt intA ->
+                            case b of
+                                TInt intB ->
+                                    (intA < intB) == boolOutput
+
+                                TFloat floatB ->
+                                    (toFloat intA < floatB) == boolOutput
+
+                                _ ->
+                                    False
+
+                        TFloat floatA ->
+                            case b of
+                                TInt intB ->
+                                    (floatA < toFloat intB) == boolOutput
+
+                                TFloat floatB ->
+                                    (floatA < floatB) == boolOutput
+
+                                _ ->
+                                    False
+
+                        TString stringA ->
+                            case b of
+                                TString stringB ->
+                                    (stringA < stringB) == boolOutput
+
+                                _ ->
+                                    False
+
+                        -- TODO remaining types (chars, lists, tuples)
+                        _ ->
+                            False
+
+                _ ->
+                    False
+    }
+
+
+greaterThan : Function2
+greaterThan =
+    { name = "(>)"
+    , checkFn =
+        \a b output ->
+            case output of
+                TBool boolOutput ->
+                    case a of
+                        TInt intA ->
+                            case b of
+                                TInt intB ->
+                                    (intA > intB) == boolOutput
+
+                                TFloat floatB ->
+                                    (toFloat intA > floatB) == boolOutput
+
+                                _ ->
+                                    False
+
+                        TFloat floatA ->
+                            case b of
+                                TInt intB ->
+                                    (floatA > toFloat intB) == boolOutput
+
+                                TFloat floatB ->
+                                    (floatA > floatB) == boolOutput
+
+                                _ ->
+                                    False
+
+                        TString stringA ->
+                            case b of
+                                TString stringB ->
+                                    (stringA > stringB) == boolOutput
+
+                                _ ->
+                                    False
+
+                        -- TODO remaining types (chars, lists, tuples)
                         _ ->
                             False
 
