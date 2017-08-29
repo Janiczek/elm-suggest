@@ -11425,12 +11425,12 @@ var _elm_tools$parser$Parser$AtLeast = function (a) {
 };
 var _elm_tools$parser$Parser$zeroOrMore = _elm_tools$parser$Parser$AtLeast(0);
 var _elm_tools$parser$Parser$oneOrMore = _elm_tools$parser$Parser$AtLeast(1);
-var _janiczek$elm_suggest$Functions$greaterThan = {
-	name: '(>)',
+var _janiczek$elm_suggest$Functions$compare_ = {
+	name: 'compare',
 	checkFn: F3(
 		function (a, b, output) {
 			var _p0 = output;
-			if (_p0.ctor === 'TBool') {
+			if (_p0.ctor === 'TOrder') {
 				var _p7 = _p0._0;
 				var _p1 = a;
 				switch (_p1.ctor) {
@@ -11440,13 +11440,14 @@ var _janiczek$elm_suggest$Functions$greaterThan = {
 						switch (_p2.ctor) {
 							case 'TInt':
 								return _elm_lang$core$Native_Utils.eq(
-									_elm_lang$core$Native_Utils.cmp(_p3, _p2._0) > 0,
+									A2(_elm_lang$core$Basics$compare, _p3, _p2._0),
 									_p7);
 							case 'TFloat':
 								return _elm_lang$core$Native_Utils.eq(
-									_elm_lang$core$Native_Utils.cmp(
+									A2(
+										_elm_lang$core$Basics$compare,
 										_elm_lang$core$Basics$toFloat(_p3),
-										_p2._0) > 0,
+										_p2._0),
 									_p7);
 							default:
 								return false;
@@ -11457,13 +11458,14 @@ var _janiczek$elm_suggest$Functions$greaterThan = {
 						switch (_p4.ctor) {
 							case 'TInt':
 								return _elm_lang$core$Native_Utils.eq(
-									_elm_lang$core$Native_Utils.cmp(
+									A2(
+										_elm_lang$core$Basics$compare,
 										_p5,
-										_elm_lang$core$Basics$toFloat(_p4._0)) > 0,
+										_elm_lang$core$Basics$toFloat(_p4._0)),
 									_p7);
 							case 'TFloat':
 								return _elm_lang$core$Native_Utils.eq(
-									_elm_lang$core$Native_Utils.cmp(_p5, _p4._0) > 0,
+									A2(_elm_lang$core$Basics$compare, _p5, _p4._0),
 									_p7);
 							default:
 								return false;
@@ -11472,8 +11474,354 @@ var _janiczek$elm_suggest$Functions$greaterThan = {
 						var _p6 = b;
 						if (_p6.ctor === 'TString') {
 							return _elm_lang$core$Native_Utils.eq(
-								_elm_lang$core$Native_Utils.cmp(_p1._0, _p6._0) > 0,
+								A2(_elm_lang$core$Basics$compare, _p1._0, _p6._0),
 								_p7);
+						} else {
+							return false;
+						}
+					default:
+						return false;
+				}
+			} else {
+				return false;
+			}
+		})
+};
+var _janiczek$elm_suggest$Functions$min_ = {
+	name: 'min',
+	checkFn: F3(
+		function (a, b, output) {
+			var _p8 = output;
+			switch (_p8.ctor) {
+				case 'TInt':
+					var _p9 = a;
+					if (_p9.ctor === 'TInt') {
+						var _p10 = b;
+						if (_p10.ctor === 'TInt') {
+							return _elm_lang$core$Native_Utils.eq(
+								A2(_elm_lang$core$Basics$min, _p9._0, _p10._0),
+								_p8._0);
+						} else {
+							return false;
+						}
+					} else {
+						return false;
+					}
+				case 'TFloat':
+					var _p16 = _p8._0;
+					var _p11 = a;
+					switch (_p11.ctor) {
+						case 'TInt':
+							var _p13 = _p11._0;
+							var _p12 = b;
+							switch (_p12.ctor) {
+								case 'TInt':
+									return _elm_lang$core$Native_Utils.eq(
+										_elm_lang$core$Basics$toFloat(
+											A2(_elm_lang$core$Basics$min, _p13, _p12._0)),
+										_p16);
+								case 'TFloat':
+									return _elm_lang$core$Native_Utils.eq(
+										A2(
+											_elm_lang$core$Basics$min,
+											_elm_lang$core$Basics$toFloat(_p13),
+											_p12._0),
+										_p16);
+								default:
+									return false;
+							}
+						case 'TFloat':
+							var _p15 = _p11._0;
+							var _p14 = b;
+							switch (_p14.ctor) {
+								case 'TInt':
+									return _elm_lang$core$Native_Utils.eq(
+										A2(
+											_elm_lang$core$Basics$min,
+											_p15,
+											_elm_lang$core$Basics$toFloat(_p14._0)),
+										_p16);
+								case 'TFloat':
+									return _elm_lang$core$Native_Utils.eq(
+										A2(_elm_lang$core$Basics$min, _p15, _p14._0),
+										_p16);
+								default:
+									return false;
+							}
+						default:
+							return false;
+					}
+				case 'TString':
+					var _p17 = a;
+					if (_p17.ctor === 'TString') {
+						var _p18 = b;
+						if (_p18.ctor === 'TString') {
+							return _elm_lang$core$Native_Utils.eq(
+								A2(_elm_lang$core$Basics$min, _p17._0, _p18._0),
+								_p8._0);
+						} else {
+							return false;
+						}
+					} else {
+						return false;
+					}
+				default:
+					return false;
+			}
+		})
+};
+var _janiczek$elm_suggest$Functions$max_ = {
+	name: 'max',
+	checkFn: F3(
+		function (a, b, output) {
+			var _p19 = output;
+			switch (_p19.ctor) {
+				case 'TInt':
+					var _p20 = a;
+					if (_p20.ctor === 'TInt') {
+						var _p21 = b;
+						if (_p21.ctor === 'TInt') {
+							return _elm_lang$core$Native_Utils.eq(
+								A2(_elm_lang$core$Basics$max, _p20._0, _p21._0),
+								_p19._0);
+						} else {
+							return false;
+						}
+					} else {
+						return false;
+					}
+				case 'TFloat':
+					var _p27 = _p19._0;
+					var _p22 = a;
+					switch (_p22.ctor) {
+						case 'TInt':
+							var _p24 = _p22._0;
+							var _p23 = b;
+							switch (_p23.ctor) {
+								case 'TInt':
+									return _elm_lang$core$Native_Utils.eq(
+										_elm_lang$core$Basics$toFloat(
+											A2(_elm_lang$core$Basics$max, _p24, _p23._0)),
+										_p27);
+								case 'TFloat':
+									return _elm_lang$core$Native_Utils.eq(
+										A2(
+											_elm_lang$core$Basics$max,
+											_elm_lang$core$Basics$toFloat(_p24),
+											_p23._0),
+										_p27);
+								default:
+									return false;
+							}
+						case 'TFloat':
+							var _p26 = _p22._0;
+							var _p25 = b;
+							switch (_p25.ctor) {
+								case 'TInt':
+									return _elm_lang$core$Native_Utils.eq(
+										A2(
+											_elm_lang$core$Basics$max,
+											_p26,
+											_elm_lang$core$Basics$toFloat(_p25._0)),
+										_p27);
+								case 'TFloat':
+									return _elm_lang$core$Native_Utils.eq(
+										A2(_elm_lang$core$Basics$max, _p26, _p25._0),
+										_p27);
+								default:
+									return false;
+							}
+						default:
+							return false;
+					}
+				case 'TString':
+					var _p28 = a;
+					if (_p28.ctor === 'TString') {
+						var _p29 = b;
+						if (_p29.ctor === 'TString') {
+							return _elm_lang$core$Native_Utils.eq(
+								A2(_elm_lang$core$Basics$max, _p28._0, _p29._0),
+								_p19._0);
+						} else {
+							return false;
+						}
+					} else {
+						return false;
+					}
+				default:
+					return false;
+			}
+		})
+};
+var _janiczek$elm_suggest$Functions$greaterOrEqualThan = {
+	name: '(>=)',
+	checkFn: F3(
+		function (a, b, output) {
+			var _p30 = output;
+			if (_p30.ctor === 'TBool') {
+				var _p37 = _p30._0;
+				var _p31 = a;
+				switch (_p31.ctor) {
+					case 'TInt':
+						var _p33 = _p31._0;
+						var _p32 = b;
+						switch (_p32.ctor) {
+							case 'TInt':
+								return _elm_lang$core$Native_Utils.eq(
+									_elm_lang$core$Native_Utils.cmp(_p33, _p32._0) > -1,
+									_p37);
+							case 'TFloat':
+								return _elm_lang$core$Native_Utils.eq(
+									_elm_lang$core$Native_Utils.cmp(
+										_elm_lang$core$Basics$toFloat(_p33),
+										_p32._0) > -1,
+									_p37);
+							default:
+								return false;
+						}
+					case 'TFloat':
+						var _p35 = _p31._0;
+						var _p34 = b;
+						switch (_p34.ctor) {
+							case 'TInt':
+								return _elm_lang$core$Native_Utils.eq(
+									_elm_lang$core$Native_Utils.cmp(
+										_p35,
+										_elm_lang$core$Basics$toFloat(_p34._0)) > -1,
+									_p37);
+							case 'TFloat':
+								return _elm_lang$core$Native_Utils.eq(
+									_elm_lang$core$Native_Utils.cmp(_p35, _p34._0) > -1,
+									_p37);
+							default:
+								return false;
+						}
+					case 'TString':
+						var _p36 = b;
+						if (_p36.ctor === 'TString') {
+							return _elm_lang$core$Native_Utils.eq(
+								_elm_lang$core$Native_Utils.cmp(_p31._0, _p36._0) > -1,
+								_p37);
+						} else {
+							return false;
+						}
+					default:
+						return false;
+				}
+			} else {
+				return false;
+			}
+		})
+};
+var _janiczek$elm_suggest$Functions$lessOrEqualThan = {
+	name: '(<=)',
+	checkFn: F3(
+		function (a, b, output) {
+			var _p38 = output;
+			if (_p38.ctor === 'TBool') {
+				var _p45 = _p38._0;
+				var _p39 = a;
+				switch (_p39.ctor) {
+					case 'TInt':
+						var _p41 = _p39._0;
+						var _p40 = b;
+						switch (_p40.ctor) {
+							case 'TInt':
+								return _elm_lang$core$Native_Utils.eq(
+									_elm_lang$core$Native_Utils.cmp(_p41, _p40._0) < 1,
+									_p45);
+							case 'TFloat':
+								return _elm_lang$core$Native_Utils.eq(
+									_elm_lang$core$Native_Utils.cmp(
+										_elm_lang$core$Basics$toFloat(_p41),
+										_p40._0) < 1,
+									_p45);
+							default:
+								return false;
+						}
+					case 'TFloat':
+						var _p43 = _p39._0;
+						var _p42 = b;
+						switch (_p42.ctor) {
+							case 'TInt':
+								return _elm_lang$core$Native_Utils.eq(
+									_elm_lang$core$Native_Utils.cmp(
+										_p43,
+										_elm_lang$core$Basics$toFloat(_p42._0)) < 1,
+									_p45);
+							case 'TFloat':
+								return _elm_lang$core$Native_Utils.eq(
+									_elm_lang$core$Native_Utils.cmp(_p43, _p42._0) < 1,
+									_p45);
+							default:
+								return false;
+						}
+					case 'TString':
+						var _p44 = b;
+						if (_p44.ctor === 'TString') {
+							return _elm_lang$core$Native_Utils.eq(
+								_elm_lang$core$Native_Utils.cmp(_p39._0, _p44._0) < 1,
+								_p45);
+						} else {
+							return false;
+						}
+					default:
+						return false;
+				}
+			} else {
+				return false;
+			}
+		})
+};
+var _janiczek$elm_suggest$Functions$greaterThan = {
+	name: '(>)',
+	checkFn: F3(
+		function (a, b, output) {
+			var _p46 = output;
+			if (_p46.ctor === 'TBool') {
+				var _p53 = _p46._0;
+				var _p47 = a;
+				switch (_p47.ctor) {
+					case 'TInt':
+						var _p49 = _p47._0;
+						var _p48 = b;
+						switch (_p48.ctor) {
+							case 'TInt':
+								return _elm_lang$core$Native_Utils.eq(
+									_elm_lang$core$Native_Utils.cmp(_p49, _p48._0) > 0,
+									_p53);
+							case 'TFloat':
+								return _elm_lang$core$Native_Utils.eq(
+									_elm_lang$core$Native_Utils.cmp(
+										_elm_lang$core$Basics$toFloat(_p49),
+										_p48._0) > 0,
+									_p53);
+							default:
+								return false;
+						}
+					case 'TFloat':
+						var _p51 = _p47._0;
+						var _p50 = b;
+						switch (_p50.ctor) {
+							case 'TInt':
+								return _elm_lang$core$Native_Utils.eq(
+									_elm_lang$core$Native_Utils.cmp(
+										_p51,
+										_elm_lang$core$Basics$toFloat(_p50._0)) > 0,
+									_p53);
+							case 'TFloat':
+								return _elm_lang$core$Native_Utils.eq(
+									_elm_lang$core$Native_Utils.cmp(_p51, _p50._0) > 0,
+									_p53);
+							default:
+								return false;
+						}
+					case 'TString':
+						var _p52 = b;
+						if (_p52.ctor === 'TString') {
+							return _elm_lang$core$Native_Utils.eq(
+								_elm_lang$core$Native_Utils.cmp(_p47._0, _p52._0) > 0,
+								_p53);
 						} else {
 							return false;
 						}
@@ -11489,51 +11837,51 @@ var _janiczek$elm_suggest$Functions$lessThan = {
 	name: '(<)',
 	checkFn: F3(
 		function (a, b, output) {
-			var _p8 = output;
-			if (_p8.ctor === 'TBool') {
-				var _p15 = _p8._0;
-				var _p9 = a;
-				switch (_p9.ctor) {
+			var _p54 = output;
+			if (_p54.ctor === 'TBool') {
+				var _p61 = _p54._0;
+				var _p55 = a;
+				switch (_p55.ctor) {
 					case 'TInt':
-						var _p11 = _p9._0;
-						var _p10 = b;
-						switch (_p10.ctor) {
+						var _p57 = _p55._0;
+						var _p56 = b;
+						switch (_p56.ctor) {
 							case 'TInt':
 								return _elm_lang$core$Native_Utils.eq(
-									_elm_lang$core$Native_Utils.cmp(_p11, _p10._0) < 0,
-									_p15);
+									_elm_lang$core$Native_Utils.cmp(_p57, _p56._0) < 0,
+									_p61);
 							case 'TFloat':
 								return _elm_lang$core$Native_Utils.eq(
 									_elm_lang$core$Native_Utils.cmp(
-										_elm_lang$core$Basics$toFloat(_p11),
-										_p10._0) < 0,
-									_p15);
+										_elm_lang$core$Basics$toFloat(_p57),
+										_p56._0) < 0,
+									_p61);
 							default:
 								return false;
 						}
 					case 'TFloat':
-						var _p13 = _p9._0;
-						var _p12 = b;
-						switch (_p12.ctor) {
+						var _p59 = _p55._0;
+						var _p58 = b;
+						switch (_p58.ctor) {
 							case 'TInt':
 								return _elm_lang$core$Native_Utils.eq(
 									_elm_lang$core$Native_Utils.cmp(
-										_p13,
-										_elm_lang$core$Basics$toFloat(_p12._0)) < 0,
-									_p15);
+										_p59,
+										_elm_lang$core$Basics$toFloat(_p58._0)) < 0,
+									_p61);
 							case 'TFloat':
 								return _elm_lang$core$Native_Utils.eq(
-									_elm_lang$core$Native_Utils.cmp(_p13, _p12._0) < 0,
-									_p15);
+									_elm_lang$core$Native_Utils.cmp(_p59, _p58._0) < 0,
+									_p61);
 							default:
 								return false;
 						}
 					case 'TString':
-						var _p14 = b;
-						if (_p14.ctor === 'TString') {
+						var _p60 = b;
+						if (_p60.ctor === 'TString') {
 							return _elm_lang$core$Native_Utils.eq(
-								_elm_lang$core$Native_Utils.cmp(_p9._0, _p14._0) < 0,
-								_p15);
+								_elm_lang$core$Native_Utils.cmp(_p55._0, _p60._0) < 0,
+								_p61);
 						} else {
 							return false;
 						}
@@ -11549,60 +11897,60 @@ var _janiczek$elm_suggest$Functions$notEqual = {
 	name: '(/=)',
 	checkFn: F3(
 		function (a, b, output) {
-			var _p16 = output;
-			if (_p16.ctor === 'TBool') {
-				var _p24 = _p16._0;
-				var _p17 = a;
-				switch (_p17.ctor) {
+			var _p62 = output;
+			if (_p62.ctor === 'TBool') {
+				var _p70 = _p62._0;
+				var _p63 = a;
+				switch (_p63.ctor) {
 					case 'TInt':
-						var _p19 = _p17._0;
-						var _p18 = b;
-						switch (_p18.ctor) {
+						var _p65 = _p63._0;
+						var _p64 = b;
+						switch (_p64.ctor) {
 							case 'TInt':
 								return _elm_lang$core$Native_Utils.eq(
-									!_elm_lang$core$Native_Utils.eq(_p19, _p18._0),
-									_p24);
+									!_elm_lang$core$Native_Utils.eq(_p65, _p64._0),
+									_p70);
 							case 'TFloat':
 								return _elm_lang$core$Native_Utils.eq(
 									!_elm_lang$core$Native_Utils.eq(
-										_elm_lang$core$Basics$toFloat(_p19),
-										_p18._0),
-									_p24);
+										_elm_lang$core$Basics$toFloat(_p65),
+										_p64._0),
+									_p70);
 							default:
 								return false;
 						}
 					case 'TFloat':
-						var _p21 = _p17._0;
-						var _p20 = b;
-						switch (_p20.ctor) {
+						var _p67 = _p63._0;
+						var _p66 = b;
+						switch (_p66.ctor) {
 							case 'TInt':
 								return _elm_lang$core$Native_Utils.eq(
 									!_elm_lang$core$Native_Utils.eq(
-										_p21,
-										_elm_lang$core$Basics$toFloat(_p20._0)),
-									_p24);
+										_p67,
+										_elm_lang$core$Basics$toFloat(_p66._0)),
+									_p70);
 							case 'TFloat':
 								return _elm_lang$core$Native_Utils.eq(
-									!_elm_lang$core$Native_Utils.eq(_p21, _p20._0),
-									_p24);
+									!_elm_lang$core$Native_Utils.eq(_p67, _p66._0),
+									_p70);
 							default:
 								return false;
 						}
 					case 'TBool':
-						var _p22 = b;
-						if (_p22.ctor === 'TBool') {
+						var _p68 = b;
+						if (_p68.ctor === 'TBool') {
 							return _elm_lang$core$Native_Utils.eq(
-								!_elm_lang$core$Native_Utils.eq(_p17._0, _p22._0),
-								_p24);
+								!_elm_lang$core$Native_Utils.eq(_p63._0, _p68._0),
+								_p70);
 						} else {
 							return false;
 						}
 					case 'TString':
-						var _p23 = b;
-						if (_p23.ctor === 'TString') {
+						var _p69 = b;
+						if (_p69.ctor === 'TString') {
 							return _elm_lang$core$Native_Utils.eq(
-								!_elm_lang$core$Native_Utils.eq(_p17._0, _p23._0),
-								_p24);
+								!_elm_lang$core$Native_Utils.eq(_p63._0, _p69._0),
+								_p70);
 						} else {
 							return false;
 						}
@@ -11618,60 +11966,60 @@ var _janiczek$elm_suggest$Functions$equal = {
 	name: '(==)',
 	checkFn: F3(
 		function (a, b, output) {
-			var _p25 = output;
-			if (_p25.ctor === 'TBool') {
-				var _p33 = _p25._0;
-				var _p26 = a;
-				switch (_p26.ctor) {
+			var _p71 = output;
+			if (_p71.ctor === 'TBool') {
+				var _p79 = _p71._0;
+				var _p72 = a;
+				switch (_p72.ctor) {
 					case 'TInt':
-						var _p28 = _p26._0;
-						var _p27 = b;
-						switch (_p27.ctor) {
+						var _p74 = _p72._0;
+						var _p73 = b;
+						switch (_p73.ctor) {
 							case 'TInt':
 								return _elm_lang$core$Native_Utils.eq(
-									_elm_lang$core$Native_Utils.eq(_p28, _p27._0),
-									_p33);
+									_elm_lang$core$Native_Utils.eq(_p74, _p73._0),
+									_p79);
 							case 'TFloat':
 								return _elm_lang$core$Native_Utils.eq(
 									_elm_lang$core$Native_Utils.eq(
-										_elm_lang$core$Basics$toFloat(_p28),
-										_p27._0),
-									_p33);
+										_elm_lang$core$Basics$toFloat(_p74),
+										_p73._0),
+									_p79);
 							default:
 								return false;
 						}
 					case 'TFloat':
-						var _p30 = _p26._0;
-						var _p29 = b;
-						switch (_p29.ctor) {
+						var _p76 = _p72._0;
+						var _p75 = b;
+						switch (_p75.ctor) {
 							case 'TInt':
 								return _elm_lang$core$Native_Utils.eq(
 									_elm_lang$core$Native_Utils.eq(
-										_p30,
-										_elm_lang$core$Basics$toFloat(_p29._0)),
-									_p33);
+										_p76,
+										_elm_lang$core$Basics$toFloat(_p75._0)),
+									_p79);
 							case 'TFloat':
 								return _elm_lang$core$Native_Utils.eq(
-									_elm_lang$core$Native_Utils.eq(_p30, _p29._0),
-									_p33);
+									_elm_lang$core$Native_Utils.eq(_p76, _p75._0),
+									_p79);
 							default:
 								return false;
 						}
 					case 'TBool':
-						var _p31 = b;
-						if (_p31.ctor === 'TBool') {
+						var _p77 = b;
+						if (_p77.ctor === 'TBool') {
 							return _elm_lang$core$Native_Utils.eq(
-								_elm_lang$core$Native_Utils.eq(_p26._0, _p31._0),
-								_p33);
+								_elm_lang$core$Native_Utils.eq(_p72._0, _p77._0),
+								_p79);
 						} else {
 							return false;
 						}
 					case 'TString':
-						var _p32 = b;
-						if (_p32.ctor === 'TString') {
+						var _p78 = b;
+						if (_p78.ctor === 'TString') {
 							return _elm_lang$core$Native_Utils.eq(
-								_elm_lang$core$Native_Utils.eq(_p26._0, _p32._0),
-								_p33);
+								_elm_lang$core$Native_Utils.eq(_p72._0, _p78._0),
+								_p79);
 						} else {
 							return false;
 						}
@@ -11687,39 +12035,39 @@ var _janiczek$elm_suggest$Functions$minus = {
 	name: '(-)',
 	checkFn: F3(
 		function (a, b, output) {
-			var _p34 = output;
-			switch (_p34.ctor) {
+			var _p80 = output;
+			switch (_p80.ctor) {
 				case 'TInt':
-					var _p40 = _p34._0;
-					var _p35 = a;
-					switch (_p35.ctor) {
+					var _p86 = _p80._0;
+					var _p81 = a;
+					switch (_p81.ctor) {
 						case 'TInt':
-							var _p37 = _p35._0;
-							var _p36 = b;
-							switch (_p36.ctor) {
+							var _p83 = _p81._0;
+							var _p82 = b;
+							switch (_p82.ctor) {
 								case 'TInt':
 									return _elm_lang$core$Native_Utils.eq(
-										_elm_lang$core$Basics$toFloat(_p37 - _p36._0),
-										_elm_lang$core$Basics$toFloat(_p40));
+										_elm_lang$core$Basics$toFloat(_p83 - _p82._0),
+										_elm_lang$core$Basics$toFloat(_p86));
 								case 'TFloat':
 									return _elm_lang$core$Native_Utils.eq(
-										_elm_lang$core$Basics$toFloat(_p37) - _p36._0,
-										_elm_lang$core$Basics$toFloat(_p40));
+										_elm_lang$core$Basics$toFloat(_p83) - _p82._0,
+										_elm_lang$core$Basics$toFloat(_p86));
 								default:
 									return false;
 							}
 						case 'TFloat':
-							var _p39 = _p35._0;
-							var _p38 = b;
-							switch (_p38.ctor) {
+							var _p85 = _p81._0;
+							var _p84 = b;
+							switch (_p84.ctor) {
 								case 'TInt':
 									return _elm_lang$core$Native_Utils.eq(
-										_p39 - _elm_lang$core$Basics$toFloat(_p38._0),
-										_elm_lang$core$Basics$toFloat(_p40));
+										_p85 - _elm_lang$core$Basics$toFloat(_p84._0),
+										_elm_lang$core$Basics$toFloat(_p86));
 								case 'TFloat':
 									return _elm_lang$core$Native_Utils.eq(
-										_p39 - _p38._0,
-										_elm_lang$core$Basics$toFloat(_p40));
+										_p85 - _p84._0,
+										_elm_lang$core$Basics$toFloat(_p86));
 								default:
 									return false;
 							}
@@ -11727,34 +12075,34 @@ var _janiczek$elm_suggest$Functions$minus = {
 							return false;
 					}
 				case 'TFloat':
-					var _p46 = _p34._0;
-					var _p41 = a;
-					switch (_p41.ctor) {
+					var _p92 = _p80._0;
+					var _p87 = a;
+					switch (_p87.ctor) {
 						case 'TInt':
-							var _p43 = _p41._0;
-							var _p42 = b;
-							switch (_p42.ctor) {
+							var _p89 = _p87._0;
+							var _p88 = b;
+							switch (_p88.ctor) {
 								case 'TInt':
 									return _elm_lang$core$Native_Utils.eq(
-										_elm_lang$core$Basics$toFloat(_p43 - _p42._0),
-										_p46);
+										_elm_lang$core$Basics$toFloat(_p89 - _p88._0),
+										_p92);
 								case 'TFloat':
 									return _elm_lang$core$Native_Utils.eq(
-										_elm_lang$core$Basics$toFloat(_p43) - _p42._0,
-										_p46);
+										_elm_lang$core$Basics$toFloat(_p89) - _p88._0,
+										_p92);
 								default:
 									return false;
 							}
 						case 'TFloat':
-							var _p45 = _p41._0;
-							var _p44 = b;
-							switch (_p44.ctor) {
+							var _p91 = _p87._0;
+							var _p90 = b;
+							switch (_p90.ctor) {
 								case 'TInt':
 									return _elm_lang$core$Native_Utils.eq(
-										_p45 - _elm_lang$core$Basics$toFloat(_p44._0),
-										_p46);
+										_p91 - _elm_lang$core$Basics$toFloat(_p90._0),
+										_p92);
 								case 'TFloat':
-									return _elm_lang$core$Native_Utils.eq(_p45 - _p44._0, _p46);
+									return _elm_lang$core$Native_Utils.eq(_p91 - _p90._0, _p92);
 								default:
 									return false;
 							}
@@ -11770,39 +12118,39 @@ var _janiczek$elm_suggest$Functions$plus = {
 	name: '(+)',
 	checkFn: F3(
 		function (a, b, output) {
-			var _p47 = output;
-			switch (_p47.ctor) {
+			var _p93 = output;
+			switch (_p93.ctor) {
 				case 'TInt':
-					var _p53 = _p47._0;
-					var _p48 = a;
-					switch (_p48.ctor) {
+					var _p99 = _p93._0;
+					var _p94 = a;
+					switch (_p94.ctor) {
 						case 'TInt':
-							var _p50 = _p48._0;
-							var _p49 = b;
-							switch (_p49.ctor) {
+							var _p96 = _p94._0;
+							var _p95 = b;
+							switch (_p95.ctor) {
 								case 'TInt':
 									return _elm_lang$core$Native_Utils.eq(
-										_elm_lang$core$Basics$toFloat(_p50 + _p49._0),
-										_elm_lang$core$Basics$toFloat(_p53));
+										_elm_lang$core$Basics$toFloat(_p96 + _p95._0),
+										_elm_lang$core$Basics$toFloat(_p99));
 								case 'TFloat':
 									return _elm_lang$core$Native_Utils.eq(
-										_elm_lang$core$Basics$toFloat(_p50) + _p49._0,
-										_elm_lang$core$Basics$toFloat(_p53));
+										_elm_lang$core$Basics$toFloat(_p96) + _p95._0,
+										_elm_lang$core$Basics$toFloat(_p99));
 								default:
 									return false;
 							}
 						case 'TFloat':
-							var _p52 = _p48._0;
-							var _p51 = b;
-							switch (_p51.ctor) {
+							var _p98 = _p94._0;
+							var _p97 = b;
+							switch (_p97.ctor) {
 								case 'TInt':
 									return _elm_lang$core$Native_Utils.eq(
-										_p52 + _elm_lang$core$Basics$toFloat(_p51._0),
-										_elm_lang$core$Basics$toFloat(_p53));
+										_p98 + _elm_lang$core$Basics$toFloat(_p97._0),
+										_elm_lang$core$Basics$toFloat(_p99));
 								case 'TFloat':
 									return _elm_lang$core$Native_Utils.eq(
-										_p52 + _p51._0,
-										_elm_lang$core$Basics$toFloat(_p53));
+										_p98 + _p97._0,
+										_elm_lang$core$Basics$toFloat(_p99));
 								default:
 									return false;
 							}
@@ -11810,34 +12158,34 @@ var _janiczek$elm_suggest$Functions$plus = {
 							return false;
 					}
 				case 'TFloat':
-					var _p59 = _p47._0;
-					var _p54 = a;
-					switch (_p54.ctor) {
+					var _p105 = _p93._0;
+					var _p100 = a;
+					switch (_p100.ctor) {
 						case 'TInt':
-							var _p56 = _p54._0;
-							var _p55 = b;
-							switch (_p55.ctor) {
+							var _p102 = _p100._0;
+							var _p101 = b;
+							switch (_p101.ctor) {
 								case 'TInt':
 									return _elm_lang$core$Native_Utils.eq(
-										_elm_lang$core$Basics$toFloat(_p56 + _p55._0),
-										_p59);
+										_elm_lang$core$Basics$toFloat(_p102 + _p101._0),
+										_p105);
 								case 'TFloat':
 									return _elm_lang$core$Native_Utils.eq(
-										_elm_lang$core$Basics$toFloat(_p56) + _p55._0,
-										_p59);
+										_elm_lang$core$Basics$toFloat(_p102) + _p101._0,
+										_p105);
 								default:
 									return false;
 							}
 						case 'TFloat':
-							var _p58 = _p54._0;
-							var _p57 = b;
-							switch (_p57.ctor) {
+							var _p104 = _p100._0;
+							var _p103 = b;
+							switch (_p103.ctor) {
 								case 'TInt':
 									return _elm_lang$core$Native_Utils.eq(
-										_p58 + _elm_lang$core$Basics$toFloat(_p57._0),
-										_p59);
+										_p104 + _elm_lang$core$Basics$toFloat(_p103._0),
+										_p105);
 								case 'TFloat':
-									return _elm_lang$core$Native_Utils.eq(_p58 + _p57._0, _p59);
+									return _elm_lang$core$Native_Utils.eq(_p104 + _p103._0, _p105);
 								default:
 									return false;
 							}
@@ -11853,13 +12201,13 @@ var _janiczek$elm_suggest$Functions$listHead = {
 	name: 'List.head',
 	checkFn: F2(
 		function (a, output) {
-			var _p60 = a;
-			if (_p60.ctor === 'TList') {
-				var _p61 = output;
-				if (_p61.ctor === 'TMaybe') {
+			var _p106 = a;
+			if (_p106.ctor === 'TList') {
+				var _p107 = output;
+				if (_p107.ctor === 'TMaybe') {
 					return _elm_lang$core$Native_Utils.eq(
-						_elm_lang$core$List$head(_p60._0),
-						_p61._0);
+						_elm_lang$core$List$head(_p106._0),
+						_p107._0);
 				} else {
 					return false;
 				}
@@ -11872,13 +12220,13 @@ var _janiczek$elm_suggest$Functions$listIsEmpty = {
 	name: 'List.isEmpty',
 	checkFn: F2(
 		function (a, output) {
-			var _p62 = a;
-			if (_p62.ctor === 'TList') {
-				var _p63 = output;
-				if (_p63.ctor === 'TBool') {
+			var _p108 = a;
+			if (_p108.ctor === 'TList') {
+				var _p109 = output;
+				if (_p109.ctor === 'TBool') {
 					return _elm_lang$core$Native_Utils.eq(
-						_elm_lang$core$List$isEmpty(_p62._0),
-						_p63._0);
+						_elm_lang$core$List$isEmpty(_p108._0),
+						_p109._0);
 				} else {
 					return false;
 				}
@@ -11891,13 +12239,13 @@ var _janiczek$elm_suggest$Functions$listLength = {
 	name: 'List.length',
 	checkFn: F2(
 		function (a, output) {
-			var _p64 = a;
-			if (_p64.ctor === 'TList') {
-				var _p65 = output;
-				if (_p65.ctor === 'TInt') {
+			var _p110 = a;
+			if (_p110.ctor === 'TList') {
+				var _p111 = output;
+				if (_p111.ctor === 'TInt') {
 					return _elm_lang$core$Native_Utils.eq(
-						_elm_lang$core$List$length(_p64._0),
-						_p65._0);
+						_elm_lang$core$List$length(_p110._0),
+						_p111._0);
 				} else {
 					return false;
 				}
@@ -11924,7 +12272,27 @@ var _janiczek$elm_suggest$Functions$functions2 = {
 					_1: {
 						ctor: '::',
 						_0: _janiczek$elm_suggest$Functions$greaterThan,
-						_1: {ctor: '[]'}
+						_1: {
+							ctor: '::',
+							_0: _janiczek$elm_suggest$Functions$lessOrEqualThan,
+							_1: {
+								ctor: '::',
+								_0: _janiczek$elm_suggest$Functions$greaterOrEqualThan,
+								_1: {
+									ctor: '::',
+									_0: _janiczek$elm_suggest$Functions$max_,
+									_1: {
+										ctor: '::',
+										_0: _janiczek$elm_suggest$Functions$min_,
+										_1: {
+											ctor: '::',
+											_0: _janiczek$elm_suggest$Functions$compare_,
+											_1: {ctor: '[]'}
+										}
+									}
+								}
+							}
+						}
 					}
 				}
 			}
@@ -12228,7 +12596,16 @@ var _janiczek$elm_suggest$View$viewSuggestions = function (functions) {
 					ctor: '::',
 					_0: A2(
 						_elm_lang$html$Html$pre,
-						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$style(
+								{
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: 'margin', _1: '0'},
+									_1: {ctor: '[]'}
+								}),
+							_1: {ctor: '[]'}
+						},
 						{
 							ctor: '::',
 							_0: _elm_lang$html$Html$text(fn),
@@ -12508,7 +12885,7 @@ var _janiczek$elm_suggest$View$viewCaveats = A2(
 							{ctor: '[]'},
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html$text('Order doesn\'t work'),
+								_0: _elm_lang$html$Html$text('Lists don\'t work'),
 								_1: {ctor: '[]'}
 							}),
 						_1: {
@@ -12518,7 +12895,7 @@ var _janiczek$elm_suggest$View$viewCaveats = A2(
 								{ctor: '[]'},
 								{
 									ctor: '::',
-									_0: _elm_lang$html$Html$text('Lists don\'t work'),
+									_0: _elm_lang$html$Html$text('Tuples don\'t work'),
 									_1: {ctor: '[]'}
 								}),
 							_1: {
@@ -12528,7 +12905,7 @@ var _janiczek$elm_suggest$View$viewCaveats = A2(
 									{ctor: '[]'},
 									{
 										ctor: '::',
-										_0: _elm_lang$html$Html$text('Tuples don\'t work'),
+										_0: _elm_lang$html$Html$text('Maybes don\'t work'),
 										_1: {ctor: '[]'}
 									}),
 								_1: {
@@ -12538,21 +12915,10 @@ var _janiczek$elm_suggest$View$viewCaveats = A2(
 										{ctor: '[]'},
 										{
 											ctor: '::',
-											_0: _elm_lang$html$Html$text('Maybes don\'t work'),
+											_0: _elm_lang$html$Html$text('Results don\'t work'),
 											_1: {ctor: '[]'}
 										}),
-									_1: {
-										ctor: '::',
-										_0: A2(
-											_elm_lang$html$Html$li,
-											{ctor: '[]'},
-											{
-												ctor: '::',
-												_0: _elm_lang$html$Html$text('Results don\'t work'),
-												_1: {ctor: '[]'}
-											}),
-										_1: {ctor: '[]'}
-									}
+									_1: {ctor: '[]'}
 								}
 							}
 						}

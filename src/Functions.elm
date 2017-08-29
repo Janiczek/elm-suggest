@@ -52,6 +52,11 @@ functions2 =
     , notEqual
     , lessThan
     , greaterThan
+    , lessOrEqualThan
+    , greaterOrEqualThan
+    , max_
+    , min_
+    , compare_
     ]
 
 
@@ -445,6 +450,277 @@ greaterThan =
                         _ ->
                             False
 
+                _ ->
+                    False
+    }
+
+
+lessOrEqualThan : Function2
+lessOrEqualThan =
+    { name = "(<=)"
+    , checkFn =
+        \a b output ->
+            case output of
+                TBool boolOutput ->
+                    case a of
+                        TInt intA ->
+                            case b of
+                                TInt intB ->
+                                    (intA <= intB) == boolOutput
+
+                                TFloat floatB ->
+                                    (toFloat intA <= floatB) == boolOutput
+
+                                _ ->
+                                    False
+
+                        TFloat floatA ->
+                            case b of
+                                TInt intB ->
+                                    (floatA <= toFloat intB) == boolOutput
+
+                                TFloat floatB ->
+                                    (floatA <= floatB) == boolOutput
+
+                                _ ->
+                                    False
+
+                        TString stringA ->
+                            case b of
+                                TString stringB ->
+                                    (stringA <= stringB) == boolOutput
+
+                                _ ->
+                                    False
+
+                        -- TODO remaining types (chars, lists, tuples)
+                        _ ->
+                            False
+
+                _ ->
+                    False
+    }
+
+
+greaterOrEqualThan : Function2
+greaterOrEqualThan =
+    { name = "(>=)"
+    , checkFn =
+        \a b output ->
+            case output of
+                TBool boolOutput ->
+                    case a of
+                        TInt intA ->
+                            case b of
+                                TInt intB ->
+                                    (intA >= intB) == boolOutput
+
+                                TFloat floatB ->
+                                    (toFloat intA >= floatB) == boolOutput
+
+                                _ ->
+                                    False
+
+                        TFloat floatA ->
+                            case b of
+                                TInt intB ->
+                                    (floatA >= toFloat intB) == boolOutput
+
+                                TFloat floatB ->
+                                    (floatA >= floatB) == boolOutput
+
+                                _ ->
+                                    False
+
+                        TString stringA ->
+                            case b of
+                                TString stringB ->
+                                    (stringA >= stringB) == boolOutput
+
+                                _ ->
+                                    False
+
+                        -- TODO remaining types (chars, lists, tuples)
+                        _ ->
+                            False
+
+                _ ->
+                    False
+    }
+
+
+max_ : Function2
+max_ =
+    { name = "max"
+    , checkFn =
+        \a b output ->
+            case output of
+                TInt intOutput ->
+                    case a of
+                        TInt intA ->
+                            case b of
+                                TInt intB ->
+                                    (max intA intB) == intOutput
+
+                                _ ->
+                                    False
+
+                        _ ->
+                            False
+
+                TFloat floatOutput ->
+                    case a of
+                        TInt intA ->
+                            case b of
+                                TInt intB ->
+                                    (toFloat (max intA intB)) == floatOutput
+
+                                TFloat floatB ->
+                                    (max (toFloat intA) floatB) == floatOutput
+
+                                _ ->
+                                    False
+
+                        TFloat floatA ->
+                            case b of
+                                TInt intB ->
+                                    (max floatA (toFloat intB)) == floatOutput
+
+                                TFloat floatB ->
+                                    (max floatA floatB) == floatOutput
+
+                                _ ->
+                                    False
+
+                        _ ->
+                            False
+
+                TString stringOutput ->
+                    case a of
+                        TString stringA ->
+                            case b of
+                                TString stringB ->
+                                    (max stringA stringB) == stringOutput
+
+                                _ ->
+                                    False
+
+                        _ ->
+                            False
+
+                -- TODO remaining types (chars, lists, tuples)
+                _ ->
+                    False
+    }
+
+
+min_ : Function2
+min_ =
+    { name = "min"
+    , checkFn =
+        \a b output ->
+            case output of
+                TInt intOutput ->
+                    case a of
+                        TInt intA ->
+                            case b of
+                                TInt intB ->
+                                    (min intA intB) == intOutput
+
+                                _ ->
+                                    False
+
+                        _ ->
+                            False
+
+                TFloat floatOutput ->
+                    case a of
+                        TInt intA ->
+                            case b of
+                                TInt intB ->
+                                    (toFloat (min intA intB)) == floatOutput
+
+                                TFloat floatB ->
+                                    (min (toFloat intA) floatB) == floatOutput
+
+                                _ ->
+                                    False
+
+                        TFloat floatA ->
+                            case b of
+                                TInt intB ->
+                                    (min floatA (toFloat intB)) == floatOutput
+
+                                TFloat floatB ->
+                                    (min floatA floatB) == floatOutput
+
+                                _ ->
+                                    False
+
+                        _ ->
+                            False
+
+                TString stringOutput ->
+                    case a of
+                        TString stringA ->
+                            case b of
+                                TString stringB ->
+                                    (min stringA stringB) == stringOutput
+
+                                _ ->
+                                    False
+
+                        _ ->
+                            False
+
+                -- TODO remaining types (chars, lists, tuples)
+                _ ->
+                    False
+    }
+
+
+compare_ : Function2
+compare_ =
+    { name = "compare"
+    , checkFn =
+        \a b output ->
+            case output of
+                TOrder orderOutput ->
+                    case a of
+                        TInt intA ->
+                            case b of
+                                TInt intB ->
+                                    (compare intA intB) == orderOutput
+
+                                TFloat floatB ->
+                                    (compare (toFloat intA) floatB) == orderOutput
+
+                                _ ->
+                                    False
+
+                        TFloat floatA ->
+                            case b of
+                                TInt intB ->
+                                    (compare floatA (toFloat intB)) == orderOutput
+
+                                TFloat floatB ->
+                                    (compare floatA floatB) == orderOutput
+
+                                _ ->
+                                    False
+
+                        TString stringA ->
+                            case b of
+                                TString stringB ->
+                                    (compare stringA stringB) == orderOutput
+
+                                _ ->
+                                    False
+
+                        _ ->
+                            False
+
+                -- TODO remaining types (chars, lists, tuples)
                 _ ->
                     False
     }

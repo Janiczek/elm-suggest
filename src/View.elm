@@ -40,7 +40,6 @@ viewCaveats =
         [ H.h4 [] [ H.text "Caveats:" ]
         , H.ul []
             [ H.li [] [ H.text "Strings with escaped double quotes don't work" ]
-            , H.li [] [ H.text "Order doesn't work" ]
             , H.li [] [ H.text "Lists don't work" ]
             , H.li [] [ H.text "Tuples don't work" ]
             , H.li [] [ H.text "Maybes don't work" ]
@@ -138,7 +137,14 @@ viewSuggestions functions =
     let
         suggestions =
             functions
-                |> List.map (\fn -> H.li [] [ H.pre [] [ H.text fn ] ])
+                |> List.map
+                    (\fn ->
+                        H.li []
+                            [ H.pre
+                                [ HA.style [ ( "margin", "0" ) ] ]
+                                [ H.text fn ]
+                            ]
+                    )
     in
         H.div []
             [ H.h2 [] [ H.text "Suggestions" ]
