@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-elm-make src/Main.elm --yes --warn --output dist/elm.js
+elm-make src/Main.elm --yes --warn

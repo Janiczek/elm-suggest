@@ -31,7 +31,7 @@ viewInputs : Array (Maybe String) -> Html Msg
 viewInputs inputs =
     H.div []
         [ H.h2 [] [ H.text "Inputs" ]
-        , H.p [] [ H.text "(the order doesn't matter)" ]
+        , H.p [] [ H.text "(TODO in the future the order won't matter :) )" ]
         , H.ul []
             ((inputs
                 |> Array.toList
@@ -41,11 +41,15 @@ viewInputs inputs =
                             value =
                                 input
                                     |> Maybe.withDefault ""
+
+                            parsedValue =
+                                parse value
                         in
                             H.li []
                                 [ H.input
                                     [ HE.onInput (SetInput index)
                                     , HA.value value
+                                    , parseResultBgColor parsedValue
                                     ]
                                     []
                                 , H.button
@@ -58,9 +62,9 @@ viewInputs inputs =
                                         , ( "margin", "0" )
                                         ]
                                     ]
-                                    [ value
-                                        |> parse
-                                        |> toString
+                                    [ parsedValue
+                                        |> Maybe.map toString
+                                        |> Maybe.withDefault ""
                                         |> H.text
                                     ]
                                 ]
@@ -81,12 +85,16 @@ viewOutput output =
     let
         value =
             output |> Maybe.withDefault ""
+
+        parsedValue =
+            parse value
     in
         H.div []
             [ H.h2 [] [ H.text "Output" ]
             , H.input
                 [ HE.onInput SetOutput
                 , HA.value value
+                , parseResultBgColor parsedValue
                 ]
                 []
             , H.pre
@@ -95,9 +103,9 @@ viewOutput output =
                     , ( "padding-left", "10px" )
                     ]
                 ]
-                [ value
-                    |> parse
-                    |> toString
+                [ parsedValue
+                    |> Maybe.map toString
+                    |> Maybe.withDefault ""
                     |> H.text
                 ]
             ]
@@ -134,3 +142,15 @@ viewDatabase =
                     |> List.map (\name -> H.li [] [ H.text name ])
                 )
             ]
+
+
+parseResultBgColor : Maybe a -> H.Attribute Msg
+parseResultBgColor parsedValue =
+    HA.style
+        [ ( "background-color"
+          , if parsedValue == Nothing then
+                "#FDD9D7"
+            else
+                "#EEF3BD"
+          )
+        ]

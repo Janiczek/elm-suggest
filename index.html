@@ -10816,6 +10816,18 @@ var _janiczek$elm_suggest$Parse$maybe = A2(
 		}
 	},
 	_elm_lang$core$Json_Decode$string);
+var _janiczek$elm_suggest$View$parseResultBgColor = function (parsedValue) {
+	return _elm_lang$html$Html_Attributes$style(
+		{
+			ctor: '::',
+			_0: {
+				ctor: '_Tuple2',
+				_0: 'background-color',
+				_1: _elm_lang$core$Native_Utils.eq(parsedValue, _elm_lang$core$Maybe$Nothing) ? '#FDD9D7' : '#EEF3BD'
+			},
+			_1: {ctor: '[]'}
+		});
+};
 var _janiczek$elm_suggest$View$viewDatabase = function () {
 	var allNames = _elm_community$list_extra$List_Extra$unique(
 		A2(
@@ -10920,6 +10932,7 @@ var _janiczek$elm_suggest$View$viewSuggestions = function (functions) {
 };
 var _janiczek$elm_suggest$View$viewOutput = function (output) {
 	var value = A2(_elm_lang$core$Maybe$withDefault, '', output);
+	var parsedValue = _janiczek$elm_suggest$Parse$parse(value);
 	return A2(
 		_elm_lang$html$Html$div,
 		{ctor: '[]'},
@@ -10943,7 +10956,11 @@ var _janiczek$elm_suggest$View$viewOutput = function (output) {
 						_1: {
 							ctor: '::',
 							_0: _elm_lang$html$Html_Attributes$value(value),
-							_1: {ctor: '[]'}
+							_1: {
+								ctor: '::',
+								_0: _janiczek$elm_suggest$View$parseResultBgColor(parsedValue),
+								_1: {ctor: '[]'}
+							}
 						}
 					},
 					{ctor: '[]'}),
@@ -10968,8 +10985,10 @@ var _janiczek$elm_suggest$View$viewOutput = function (output) {
 						{
 							ctor: '::',
 							_0: _elm_lang$html$Html$text(
-								_elm_lang$core$Basics$toString(
-									_janiczek$elm_suggest$Parse$parse(value))),
+								A2(
+									_elm_lang$core$Maybe$withDefault,
+									'',
+									A2(_elm_lang$core$Maybe$map, _elm_lang$core$Basics$toString, parsedValue))),
 							_1: {ctor: '[]'}
 						}),
 					_1: {ctor: '[]'}
@@ -10998,7 +11017,7 @@ var _janiczek$elm_suggest$View$viewInputs = function (inputs) {
 					{ctor: '[]'},
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html$text('(the order doesn\'t matter)'),
+						_0: _elm_lang$html$Html$text('(TODO in the future the order won\'t matter :) )'),
 						_1: {ctor: '[]'}
 					}),
 				_1: {
@@ -11013,6 +11032,7 @@ var _janiczek$elm_suggest$View$viewInputs = function (inputs) {
 								F2(
 									function (index, input) {
 										var value = A2(_elm_lang$core$Maybe$withDefault, '', input);
+										var parsedValue = _janiczek$elm_suggest$Parse$parse(value);
 										return A2(
 											_elm_lang$html$Html$li,
 											{ctor: '[]'},
@@ -11027,7 +11047,11 @@ var _janiczek$elm_suggest$View$viewInputs = function (inputs) {
 														_1: {
 															ctor: '::',
 															_0: _elm_lang$html$Html_Attributes$value(value),
-															_1: {ctor: '[]'}
+															_1: {
+																ctor: '::',
+																_0: _janiczek$elm_suggest$View$parseResultBgColor(parsedValue),
+																_1: {ctor: '[]'}
+															}
 														}
 													},
 													{ctor: '[]'}),
@@ -11071,8 +11095,10 @@ var _janiczek$elm_suggest$View$viewInputs = function (inputs) {
 															{
 																ctor: '::',
 																_0: _elm_lang$html$Html$text(
-																	_elm_lang$core$Basics$toString(
-																		_janiczek$elm_suggest$Parse$parse(value))),
+																	A2(
+																		_elm_lang$core$Maybe$withDefault,
+																		'',
+																		A2(_elm_lang$core$Maybe$map, _elm_lang$core$Basics$toString, parsedValue))),
 																_1: {ctor: '[]'}
 															}),
 														_1: {ctor: '[]'}
