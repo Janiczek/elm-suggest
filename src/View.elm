@@ -13,17 +13,38 @@ import List.Extra as List
 view : Model -> Html Msg
 view model =
     H.div [ HA.style [ ( "padding", "20px" ) ] ]
+        [ viewHeader
+        , viewCaveats
+        , viewInputs model.inputs
+        , viewOutput model.output
+        , viewSuggestions model.suggestions
+        , viewDatabase
+        ]
+
+
+viewHeader : Html Msg
+viewHeader =
+    H.div []
         [ H.h1 [] [ H.text "elm-suggest" ]
         , H.p []
             [ H.text "(inspired by "
             , H.a [ HA.href "https://guillaumesalles.github.io/resuggest/" ] [ H.text "resuggest" ]
             , H.text ")"
             ]
-        , H.p [] [ H.text "The parsing is a bit buggy right now - only numbers and strings and lists work; bools and maybes are WIP; and other stuff hasn't been worked on yet." ]
-        , viewInputs model.inputs
-        , viewOutput model.output
-        , viewSuggestions model.suggestions
-        , viewDatabase
+        ]
+
+
+viewCaveats : Html Msg
+viewCaveats =
+    H.div []
+        [ H.h4 [] [ H.text "Caveats:" ]
+        , H.ul []
+            [ H.li [] [ H.text "Strings with escaped double quotes don't work" ]
+            , H.li [] [ H.text "Lists don't work" ]
+            , H.li [] [ H.text "Tuples don't work" ]
+            , H.li [] [ H.text "Maybes don't work" ]
+            , H.li [] [ H.text "Results don't work" ]
+            ]
         ]
 
 
