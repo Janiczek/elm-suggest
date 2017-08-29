@@ -4,6 +4,7 @@ import String.Extra as String
 import Types exposing (Model, Msg(..))
 import Array.Hamt as Array
 import Functions exposing (Type(..))
+import Parse exposing (parse)
 
 
 update : Msg -> Model -> Model
@@ -108,17 +109,3 @@ satisfactoryFns2 a b output =
     Functions.functions2
         |> List.filter (\fn -> fn.checkFn a b output)
         |> List.map .name
-
-
-parse : String -> Maybe Type
-parse string =
-    -- TODO
-    case string of
-        "[1,2,3]" ->
-            Just <| TList (TInt 1) [ TInt 1, TInt 2, TInt 3 ]
-
-        "3" ->
-            Just <| TInt 3
-
-        _ ->
-            Nothing

@@ -19,7 +19,8 @@ type Type
     | TBool Bool
     | TChar Char
     | TString String
-    | TList Type (List Type)
+    | TList (List Type)
+    | TMaybe (Maybe Type)
 
 
 
@@ -29,13 +30,8 @@ type Type
 --| TRecord (List Field)
 --| TExtensibleRecord String (List Field)
 --| TUserType String (List Type)
-
-
-type alias Field =
-    ( String, Type )
-
-
-
+--type alias Field =
+--    ( String, Type )
 -- FN DATABASE
 
 
@@ -43,6 +39,7 @@ functions1 : List Function1
 functions1 =
     [ listLength
     , listIsEmpty
+    , listHead
     ]
 
 
@@ -65,7 +62,7 @@ listLength =
     , checkFn =
         \a output ->
             case a of
-                TList type_ vals ->
+                TList vals ->
                     case output of
                         TInt intOutput ->
                             List.length vals == intOutput
@@ -84,10 +81,29 @@ listIsEmpty =
     , checkFn =
         \a output ->
             case a of
-                TList type_ vals ->
+                TList vals ->
                     case output of
                         TBool boolOutput ->
                             List.isEmpty vals == boolOutput
+
+                        _ ->
+                            False
+
+                _ ->
+                    False
+    }
+
+
+listHead : Function1
+listHead =
+    { name = "List.head"
+    , checkFn =
+        \a output ->
+            case a of
+                TList vals ->
+                    case output of
+                        TMaybe maybeOutput ->
+                            List.head vals == maybeOutput
 
                         _ ->
                             False
@@ -147,7 +163,7 @@ intMinus =
 
 floatPlus : Function2
 floatPlus =
-    { name = "(-)"
+    { name = "(+)"
     , checkFn =
         \a b output ->
             case a of

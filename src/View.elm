@@ -5,6 +5,9 @@ import Html.Attributes as HA
 import Html.Events as HE
 import Types exposing (Model, Msg(..))
 import Array.Hamt as Array exposing (Array)
+import Parse exposing (parse)
+import Functions
+import List.Extra as List
 
 
 view : Model -> Html Msg
@@ -16,9 +19,11 @@ view model =
             , H.a [ HA.href "https://guillaumesalles.github.io/resuggest/" ] [ H.text "resuggest" ]
             , H.text ")"
             ]
+        , H.p [] [ H.text "The parsing is a bit buggy right now - only numbers and strings and lists work; bools and maybes are WIP; and other stuff hasn't been worked on yet." ]
         , viewInputs model.inputs
         , viewOutput model.output
         , viewSuggestions model.suggestions
+        , viewDatabase
         ]
 
 
@@ -32,14 +37,33 @@ viewInputs inputs =
                 |> Array.toList
                 |> List.indexedMap
                     (\index input ->
-                        H.li []
-                            [ H.input
-                                [ HE.onInput (SetInput index)
-                                , HA.value (input |> Maybe.withDefault "")
+                        let
+                            value =
+                                input
+                                    |> Maybe.withDefault ""
+                        in
+                            H.li []
+                                [ H.input
+                                    [ HE.onInput (SetInput index)
+                                    , HA.value value
+                                    ]
+                                    []
+                                , H.button
+                                    [ HE.onClick (RemoveInput index) ]
+                                    [ H.text "-" ]
+                                , H.pre
+                                    [ HA.style
+                                        [ ( "display", "inline-block" )
+                                        , ( "padding-left", "10px" )
+                                        , ( "margin", "0" )
+                                        ]
+                                    ]
+                                    [ value
+                                        |> parse
+                                        |> toString
+                                        |> H.text
+                                    ]
                                 ]
-                                []
-                            , H.button [ HE.onClick (RemoveInput index) ] [ H.text "-" ]
-                            ]
                     )
              )
                 ++ [ H.li []
@@ -53,15 +77,30 @@ viewInputs inputs =
 
 
 viewOutput : Maybe String -> Html Msg
-viewOutput value =
-    H.div []
-        [ H.h2 [] [ H.text "Output" ]
-        , H.input
-            [ HE.onInput SetOutput
-            , HA.value (value |> Maybe.withDefault "")
+viewOutput output =
+    let
+        value =
+            output |> Maybe.withDefault ""
+    in
+        H.div []
+            [ H.h2 [] [ H.text "Output" ]
+            , H.input
+                [ HE.onInput SetOutput
+                , HA.value value
+                ]
+                []
+            , H.pre
+                [ HA.style
+                    [ ( "display", "inline-block" )
+                    , ( "padding-left", "10px" )
+                    ]
+                ]
+                [ value
+                    |> parse
+                    |> toString
+                    |> H.text
+                ]
             ]
-            []
-        ]
 
 
 viewSuggestions : List String -> Html Msg
@@ -77,4 +116,21 @@ viewSuggestions functions =
                 H.p [] [ H.text "none" ]
               else
                 H.ul [] suggestions
+            ]
+
+
+viewDatabase : Html Msg
+viewDatabase =
+    let
+        allNames =
+            (Functions.functions1 |> List.map .name)
+                ++ (Functions.functions2 |> List.map .name)
+                |> List.unique
+    in
+        H.div []
+            [ H.h2 [] [ H.text "Chooses from:" ]
+            , H.ul []
+                (allNames
+                    |> List.map (\name -> H.li [] [ H.text name ])
+                )
             ]
